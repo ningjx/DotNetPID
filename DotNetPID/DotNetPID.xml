@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DotNetPID</name>
+    </assembly>
+    <members>
+        <member name="T:DotNetPID.PID.PIDHandller">
+            <summary>
+            
+            </summary>
+            <param name="value">增量值/位置值</param>
+            <param name="inc_per">增量百分比</param>
+            <returns></returns>
+        </member>
+        <member name="E:DotNetPID.PID.TargetAttachEvent">
+            <summary>
+            到达目标值触发，返回值无意义
+            </summary>
+        </member>
+        <member name="E:DotNetPID.PID.StepEvent">
+            <summary>
+            每次计算后触发，别忘了返回反馈值
+            </summary>
+        </member>
+        <member name="M:DotNetPID.PID.Create(System.Double,System.Double,System.Double,System.Double,DotNetPID.PIDType,System.Int32)">
+            <summary>
+            创建PID实例
+            </summary>
+            <param name="kp">比例</param>
+            <param name="ki">积分</param>
+            <param name="kd">微分</param>
+            <param name="maxIncLimit">单次最大增量限制</param>
+            <param name="type">PID类型</param>
+            <param name="freq_ms">计算频率</param>
+        </member>
+        <member name="T:DotNetPID.PID_Inc">
+            <summary>
+            增量型PID
+            </summary>
+        </member>
+        <member name="T:DotNetPID.PID_Pos">
+            <summary>
+            位置型PID
+            </summary>
+        </member>
+        <member name="T:DotNetPID.PID_Ext">
+            <summary>
+            扩展静态类
+            </summary>
+        </member>
+        <member name="M:DotNetPID.PID_Ext.Start(DotNetPID.PID,System.Single,System.Single)">
+            <summary>
+            启动PID计算
+            </summary>
+            <param name="pid"></param>
+            <param name="actual">实际值</param>
+            <param name="target">目标值</param>
+        </member>
+        <member name="M:DotNetPID.PID_Ext.Stop(DotNetPID.PID)">
+            <summary>
+            停止PID计算
+            </summary>
+            <param name="pid"></param>
+        </member>
+        <member name="M:DotNetPID.PID_Ext.Restart(DotNetPID.PID,System.Single,System.Single)">
+            <summary>
+            重启PID计算
+            </summary>
+            <param name="pid"></param>
+            <param name="actual">实际值</param>
+            <param name="target">目标值</param>
+        </member>
+        <member name="T:DotNetPID.PIDType">
+            <summary>
+            PID类型
+            </summary>
+        </member>
+        <member name="F:DotNetPID.PIDType.Increment">
+            <summary>
+            增量型
+            </summary>
+        </member>
+        <member name="F:DotNetPID.PIDType.Positional">
+            <summary>
+            位置型
+            </summary>
+        </member>
+    </members>
+</doc>
