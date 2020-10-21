@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>DotNetPID</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>Ning</Authors>
+    <Description>增量型PID和位置型PID的实现</Description>
+    <Tags>pid,Increment PID,Positional PID,pid for dot net</Tags>
+    <Title>PID</Title>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <ApplicationIcon>20201021035910679_easyicon_net_256.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>D:\WorkSpace\DotNetPID\DotNetPID.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\WorkSpace\DotNetPID\DotNetPID.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>
