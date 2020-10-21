@@ -8,8 +8,9 @@
     <Description>增量型PID和位置型PID的实现</Description>
     <Tags>pid,Increment PID,Positional PID,pid for dot net</Tags>
     <Title>PID</Title>
+    <RepositoryUrl>https://github.com/ningjx/DotNetPID</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <ApplicationIcon>20201021035910679_easyicon_net_256.ico</ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
