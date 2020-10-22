@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45;netcoreapp2.0</TargetFrameworks>
     <PackageId>DotNetPID</PackageId>
-    <Version>1.1</Version>
+    <Version>1.2</Version>
     <Authors>Ning</Authors>
     <Description>增量型PID和位置型PID的实现</Description>
     <Tags>pid,Increment PID,Positional PID,pid for dot net</Tags>
@@ -12,7 +12,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <RepositoryType>GitHub</RepositoryType>
-    <PackageReleaseNotes>兼容.Net Freamwork4.5和.net Core 2.0</PackageReleaseNotes>
+    <PackageReleaseNotes>修复bug，优化结构</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/ningjx/DotNetPID</PackageProjectUrl>
   </PropertyGroup>
 

@@ -4,6 +4,41 @@
         <name>DotNetPID</name>
     </assembly>
     <members>
+        <member name="T:DotNetPID.PID">
+            <summary>
+            PID For DotNet
+            </summary>
+        </member>
+        <member name="F:DotNetPID.PID.Kp">
+            <summary>
+            比例系数Proportional
+            </summary>
+        </member>
+        <member name="F:DotNetPID.PID.Ki">
+            <summary>
+            积分系数Integral
+            </summary>
+        </member>
+        <member name="F:DotNetPID.PID.Kd">
+             <summary>
+            微分系数Derivative
+             </summary>
+        </member>
+        <member name="F:DotNetPID.PID.MaxInc">
+            <summary>
+            最大增量限制
+            </summary>
+        </member>
+        <member name="F:DotNetPID.PID.TargetValue">
+            <summary>
+            目标值
+            </summary>
+        </member>
+        <member name="F:DotNetPID.PID.ActualValue">
+            <summary>
+            实际值
+            </summary>
+        </member>
         <member name="T:DotNetPID.PID.PIDHandller">
             <summary>
             
@@ -19,7 +54,23 @@
         </member>
         <member name="E:DotNetPID.PID.StepEvent">
             <summary>
-            每次计算后触发，别忘了返回反馈值
+            每次计算后触发，请在函数结尾返回实际值<see cref="F:DotNetPID.PID.ActualValue"/>
+            </summary>
+        </member>
+        <member name="M:DotNetPID.PID.#ctor(System.Single,System.Single,System.Single,System.Single,System.Int32)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="kp">比例系数</param>
+            <param name="ki">积分系数</param>
+            <param name="kd">微分系数</param>
+            <param name="maxIncLimit">增量限制</param>
+            <param name="freq_ms">计算频率（毫秒）</param>
+        </member>
+        <member name="M:DotNetPID.PID.PID_CaculateOnce">
+            <summary>
+            在不调用<see cref="!:PID_Ext.Start(PID, float, float)"/>或<see cref="!:PID_Ext.Restart(PID, float, float)"/>的情况下
+            调用该函数，只执行一次PID计算
             </summary>
         </member>
         <member name="M:DotNetPID.PID.Create(System.Double,System.Double,System.Double,System.Double,DotNetPID.PIDType,System.Int32)">
@@ -33,6 +84,25 @@
             <param name="type">PID类型</param>
             <param name="freq_ms">计算频率</param>
         </member>
+        <member name="M:DotNetPID.PID.Start(System.Double,System.Double)">
+            <summary>
+            启动PID计算
+            </summary>
+            <param name="actual">实际值</param>
+            <param name="target">目标值</param>
+        </member>
+        <member name="M:DotNetPID.PID.Stop">
+            <summary>
+            停止PID计算
+            </summary>
+        </member>
+        <member name="M:DotNetPID.PID.PID_Caculate(System.Object,System.Timers.ElapsedEventArgs)">
+            <summary>
+            计算函数
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
         <member name="T:DotNetPID.PID_Inc">
             <summary>
             增量型PID
@@ -42,33 +112,6 @@
             <summary>
             位置型PID
             </summary>
-        </member>
-        <member name="T:DotNetPID.PID_Ext">
-            <summary>
-            扩展静态类
-            </summary>
-        </member>
-        <member name="M:DotNetPID.PID_Ext.Start(DotNetPID.PID,System.Single,System.Single)">
-            <summary>
-            启动PID计算
-            </summary>
-            <param name="pid"></param>
-            <param name="actual">实际值</param>
-            <param name="target">目标值</param>
-        </member>
-        <member name="M:DotNetPID.PID_Ext.Stop(DotNetPID.PID)">
-            <summary>
-            停止PID计算
-            </summary>
-            <param name="pid"></param>
-        </member>
-        <member name="M:DotNetPID.PID_Ext.Restart(DotNetPID.PID,System.Single,System.Single)">
-            <summary>
-            重启PID计算
-            </summary>
-            <param name="pid"></param>
-            <param name="actual">实际值</param>
-            <param name="target">目标值</param>
         </member>
         <member name="T:DotNetPID.PIDType">
             <summary>

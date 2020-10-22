@@ -3,6 +3,9 @@ using System.Timers;
 
 namespace DotNetPID
 {
+    /// <summary>
+    /// PID For DotNet
+    /// </summary>
     public abstract class PID
     {
         /************************************************
@@ -20,19 +23,36 @@ namespace DotNetPID
         返 回 值 ： PIDInc -------- 本次PID增量(+/-)
         *************************************************/
 
-        public float Kp;//比例系数Proportional
-        public float Ki;//积分系数Integral
-        public float Kd;//微分系数Derivative
+        /// <summary>
+        /// 比例系数Proportional
+        /// </summary>
+        public float Kp;
+        /// <summary>
+        /// 积分系数Integral
+        /// </summary>
+        public float Ki;
+        /// <summary>
+        ///微分系数Derivative
+        /// </summary>
+        public float Kd;
 
-        protected float Ek;//当前误差
-        protected float Ek1;//前一次误差 e(k-1)
-        protected float Ek2;//再前一次误差 e(k-2)
-
+        /// <summary>
+        /// 最大增量限制
+        /// </summary>
         public float MaxInc;
+        /// <summary>
+        /// 目标值
+        /// </summary>
         public float TargetValue;
+        /// <summary>
+        /// 实际值
+        /// </summary>
         public float ActualValue;
 
-        internal Timer Timer = new Timer { AutoReset = true };
+        internal float Ek;//当前误差
+        internal float Ek1;//前一次误差 e(k-1)
+        internal float Ek2;//再前一次误差 e(k-2)
+        internal Timer Timer = new Timer { AutoReset = true };//计时器
 
         /// <summary>
         /// 
@@ -48,13 +68,21 @@ namespace DotNetPID
         public event PIDHandller TargetAttachEvent;
 
         /// <summary>
-        /// 每次计算后触发，别忘了返回反馈值
+        /// 每次计算后触发，请在函数结尾返回实际值<see cref="ActualValue"/>
         /// </summary>
         public event PIDHandller StepEvent;
 
-        protected PID(float kp, float ki, float kd, float maxIncLimit, int freq_ms = 20)
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="kp">比例系数</param>
+        /// <param name="ki">积分系数</param>
+        /// <param name="kd">微分系数</param>
+        /// <param name="maxIncLimit">增量限制</param>
+        /// <param name="freq_ms">计算频率（毫秒）</param>
+        internal PID(float kp, float ki, float kd, float maxIncLimit, int freq_ms = 20)
         {
-            if (kp <= 0 || ki <= 0 || kd <= 0 || maxIncLimit <= 0 || freq_ms <= 0)
+            if (kp <= 0 || ki <= 0 || kd <= 0 || freq_ms <= 0)
                 throw new Exception("参数不能小于等于0");
 
             Kp = kp; Ki = ki; Kd = kd; MaxInc = maxIncLimit;
@@ -62,6 +90,10 @@ namespace DotNetPID
             Timer.Elapsed += PID_Caculate;
         }
 
+        /// <summary>
+        /// 在不调用<see cref="PID_Ext.Start(PID, float, float)"/>或<see cref="PID_Ext.Restart(PID, float, float)"/>的情况下
+        /// 调用该函数，只执行一次PID计算
+        /// </summary>
         public void PID_CaculateOnce()
         {
             PID_Caculate(null, null);
@@ -88,27 +120,44 @@ namespace DotNetPID
             return null;
         }
 
-        internal void ResetErr()
+        /// <summary>
+        /// 启动PID计算
+        /// </summary>
+        /// <param name="actual">实际值</param>
+        /// <param name="target">目标值</param>
+        public void Start(double actual, double target)
         {
+            Timer.Stop();
             Ek = Ek1 = Ek2 = 0;
+            TargetValue = (float)target;
+            ActualValue = (float)actual;
+            Timer.Start();
         }
 
-        internal void SetParams(float actual, float target)
+        /// <summary>
+        /// 停止PID计算
+        /// </summary>
+        public void Stop()
         {
-            TargetValue = target; ActualValue = actual;
+            Timer.Stop();
         }
 
-        protected virtual void PID_Caculate(object sender, ElapsedEventArgs e)
+        /// <summary>
+        /// 计算函数
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        internal virtual void PID_Caculate(object sender, ElapsedEventArgs e)
         {
 
         }
 
-        protected float? InvokeTargetAttachEvent(float inc, float inc_per)
+        internal float? InvokeTargetAttachEvent(float inc, float inc_per)
         {
             return TargetAttachEvent?.Invoke(inc, inc_per);
         }
 
-        protected float? InvokeStepEvent(float inc, float inc_per)
+        internal float? InvokeStepEvent(float inc, float inc_per)
         {
             return StepEvent?.Invoke(inc, inc_per);
         }
@@ -124,9 +173,9 @@ namespace DotNetPID
 
         }
 
-        protected override void PID_Caculate(object sender, ElapsedEventArgs e)
+        internal override void PID_Caculate(object sender, ElapsedEventArgs e)
         {
-            if (Math.Abs(TargetValue - ActualValue) < 0.01f)
+            if (Math.Abs(TargetValue - ActualValue) < 0.00001f)
                 InvokeTargetAttachEvent(0, 0);
 
             Ek = TargetValue - ActualValue;
@@ -136,7 +185,7 @@ namespace DotNetPID
             Ek2 = Ek1;
             Ek1 = Ek;
 
-            if (Math.Abs(pIDInc) > MaxInc)
+            if (Math.Abs(pIDInc) > MaxInc && MaxInc != 0)
                 pIDInc = pIDInc < 0 ? -MaxInc : MaxInc;
 
             ActualValue = InvokeStepEvent(pIDInc, pIDInc / MaxInc) ?? TargetValue;
@@ -153,9 +202,9 @@ namespace DotNetPID
 
         }
 
-        protected override void PID_Caculate(object sender, ElapsedEventArgs e)
+        internal override void PID_Caculate(object sender, ElapsedEventArgs e)
         {
-            if (Math.Abs(TargetValue - ActualValue) < 0.01f)
+            if (Math.Abs(TargetValue - ActualValue) < 0.00001f)
                 InvokeTargetAttachEvent(0, 0);
 
             Ek = TargetValue - ActualValue;
@@ -165,53 +214,12 @@ namespace DotNetPID
             Ek2 = Ek1;
             Ek1 = Ek;
 
-            if (Math.Abs(pIDInc) > MaxInc)
+            if (Math.Abs(pIDInc) > MaxInc && MaxInc != 0)
                 pIDInc = pIDInc < 0 ? -MaxInc : MaxInc;
 
             ActualValue += pIDInc;
 
             InvokeStepEvent(ActualValue, 0);
-        }
-    }
-
-    /// <summary>
-    /// 扩展静态类
-    /// </summary>
-    public static class PID_Ext
-    {
-        /// <summary>
-        /// 启动PID计算
-        /// </summary>
-        /// <param name="pid"></param>
-        /// <param name="actual">实际值</param>
-        /// <param name="target">目标值</param>
-        public static void Start(this PID pid, float actual, float target)
-        {
-            pid.SetParams(actual, target);
-            pid.Timer.Start();
-        }
-
-        /// <summary>
-        /// 停止PID计算
-        /// </summary>
-        /// <param name="pid"></param>
-        public static void Stop(this PID pid)
-        {
-            pid.Timer.Stop();
-        }
-
-        /// <summary>
-        /// 重启PID计算
-        /// </summary>
-        /// <param name="pid"></param>
-        /// <param name="actual">实际值</param>
-        /// <param name="target">目标值</param>
-        public static void Restart(this PID pid, float actual, float target)
-        {
-            pid.Timer.Stop();
-            pid.ResetErr();
-            pid.SetParams(actual, target);
-            pid.Timer.Start();
         }
     }
 
